@@ -4,7 +4,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 
 import { HapticTab } from "@/components/haptic-tab";
-import { IconSymbol } from "@/components/ui/icon-symbol";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
@@ -24,7 +23,6 @@ export default function TabLayout() {
         options={{
           title: "Register",
           tabBarIcon: ({ color }) => (
-            // <IconSymbol size={28} name="person.badge.plus.fill" color={color} />
             <AntDesign name="login" size={24} color="black" />
           ),
         }}
@@ -34,7 +32,6 @@ export default function TabLayout() {
         options={{
           title: "Login",
           tabBarIcon: ({ color }) => (
-            // <IconSymbol size={28} name="key.fill" color={color} />
             <FontAwesome name="user" size={24} color="black" />
           ),
         }}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,9 @@ import {
   ScrollView,
 } from "react-native";
 import { useColorScheme } from "nativewind";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -24,19 +27,38 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput, Button } from "react-native-paper";
 import { IconSymbol } from "@/components/ui/icon-symbol";
+import AntDesign from "@expo/vector-icons/AntDesign";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RegisterScreen() {
+  const [fontsLoaded] = useFonts({
+    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
+    BroadWay: require("../../assets/fonts/Broadway.ttf"),
+    Poppins: require("../../assets/fonts/Poppins-Regular.ttf"),
+    NeueRegular: require("../../assets/fonts/NeueMachina-Regular.otf"),
+    NeueBold: require("../../assets/fonts/NeueMachina-Ultrabold.otf"),
+    Gotham: require("../../assets/fonts/Gotham.ttf"),
+    CenturyGothic: require("../../assets/fonts/CenturyGothic.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
   const primaryColor = isDark ? "#818CF8" : "#6366F1";
 
   // Form state (no logic, just UI)
-  const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Animations
   const floatAnim = useSharedValue(0);
@@ -65,6 +87,12 @@ export default function RegisterScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
   const animatedFloatStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: floatAnim.value }],
@@ -84,6 +112,7 @@ export default function RegisterScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
+      onLayout={onLayoutRootView}
     >
       <View className="flex-1">
         {/* Dynamic Background Gradient */}
@@ -153,17 +182,16 @@ export default function RegisterScreen() {
                 }}
                 className="w-24 h-24 rounded-3xl justify-center items-center mb-4"
               >
-                <IconSymbol
-                  size={50}
-                  color={primaryColor}
-                  name="person.badge.plus.fill"
-                />
+                <AntDesign name="cloud" size={50} color={primaryColor} />
               </View>
-              <Text className="text-4xl font-black text-neutral-900 dark:text-white tracking-tighter mb-2">
+              <Text
+                style={{ fontFamily: "NeueRegular" }}
+                className="text-4xl text-neutral-900 dark:text-white tracking-tighter mb-2"
+              >
                 Create Account
               </Text>
-              <Text className="text-base text-neutral-600 dark:text-neutral-300 text-center">
-                Join TellerHub and start your journey
+              <Text style={{ fontFamily: "NeueRegular" }}>
+                Join Syapse-TeleMedicine and start your journey
               </Text>
             </Animated.View>
 

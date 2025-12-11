@@ -129,12 +129,12 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 justify-center px-6 py-12">
+          <View className="flex-1 justify-center px-5 py-12">
             {/* Logo Section */}
             <Animated.View
               entering={FadeInDown.delay(200).springify()}
               style={[animatedFloatStyle]}
-              className="items-center mb-8"
+              className="items-center mb-8 "
             >
               <View
                 style={{
@@ -155,11 +155,11 @@ export default function LoginScreen() {
                   name="lock.shield.fill"
                 />
               </View>
-              <Text className="text-4xl font-black text-neutral-900 dark:text-white tracking-tighter mb-2">
+              <Text className="text-4xl w-full text-center font-black text-neutral-900 dark:text-white tracking-tighter mb-2">
                 Welcome Back
               </Text>
               <Text className="text-base text-neutral-600 dark:text-neutral-300 text-center">
-                Sign in to continue to TellerHub
+                Sign in to continue to Syapse-TeleMedicine
               </Text>
             </Animated.View>
 

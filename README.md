@@ -1,10 +1,10 @@
-# TeleMedicine - AI-Powered Healthcare Platform
+# Syapse-TeleMedicine - AI-Powered Healthcare Platform
 
 A comprehensive React Native telemedicine application built with Expo that provides advanced healthcare monitoring, communication, and AI-assisted diagnosis for patients with physical conditions.
 
 ## 🏥 Overview
 
-TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the gap between patients and healthcare providers through innovative technology. The app combines real-time monitoring, AI-powered assistance, and seamless communication to deliver comprehensive healthcare services.
+Syapse-TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the gap between patients and healthcare providers through innovative technology. The app combines real-time monitoring, AI-powered assistance, and seamless communication to deliver comprehensive healthcare services.
 
 ## ✨ Key Features
 
@@ -68,7 +68,7 @@ TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the
 
    ```bash
    git clone <repository-url>
-   cd tele-medicine
+   cd TeleMedicine
    ```
 
 2. **Install dependencies**
@@ -99,7 +99,7 @@ TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the
 ## 📁 Project Structure
 
 ```
-tele-medicine/
+TeleMedicine/
 ├── app/                    # Main application screens
 │   ├── (tabs)/            # Tab-based navigation
 │   ├── _layout.tsx        # Root layout
@@ -130,7 +130,7 @@ tele-medicine/
 
 ## 🤝 Contributing
 
-We welcome contributions to improve TeleMedicine! Please read our contributing guidelines and submit pull requests for any improvements.
+We welcome contributions to improve Syapse-TeleMedicine! Please read our contributing guidelines and submit pull requests for any improvements.
 
 ## 📄 License
 
