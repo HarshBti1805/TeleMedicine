@@ -1,4 +1,6 @@
 import { Tabs } from "expo-router";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 
 import { HapticTab } from "@/components/haptic-tab";
@@ -18,20 +20,22 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="register"
         options={{
-          title: "Home",
+          title: "Register",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            // <IconSymbol size={28} name="person.badge.plus.fill" color={color} />
+            <AntDesign name="login" size={24} color="black" />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="login"
         options={{
-          title: "Explore",
+          title: "Login",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            // <IconSymbol size={28} name="key.fill" color={color} />
+            <FontAwesome name="user" size={24} color="black" />
           ),
         }}
       />

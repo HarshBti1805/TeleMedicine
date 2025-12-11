@@ -5,12 +5,154 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // The `url` property is no longer supported in Prisma 5+ schema files.
-  // Move your connection URL to `prisma.config.ts` instead.
+  // url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Store hashed passwords only
+  phone     String?  @unique
+  role      Role     @default(PATIENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  patientProfile PatientProfile?
+  doctorProfile  DoctorProfile?
+  sentMessages   Message[]       @relation("Sender")
+  receivedMessages Message[]     @relation("Receiver")
+}
+
+model PatientProfile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  fullName    String
+  dob         DateTime?
+  gender      Gender?
+  bloodGroup  String?
+  allergies   String?  // Comma-separated or short text
+  
+  // Relations
+  appointments  Appointment[]
+  medicalRecords MedicalRecord[]
+}
+
+// 5. Doctor Profile
+model DoctorProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  fullName       String
+  specialization String   // e.g., "Cardiologist", "Dermatologist"
+  licenseNumber  String   @unique
+  experienceYears Int     @default(0)
+  consultationFee Decimal @db.Decimal(10, 2) // Use Decimal for money
+  bio            String?
+  isVerified     Boolean  @default(false)    // Admin approval flag
+
+  // Availability: Stored as JSON for flexibility
+  // Format: { "Monday": ["09:00", "10:00"], "Tuesday": ["14:00"] }
+  availability   Json?
+
+  // Relations
+  appointments Appointment[]
+}
+
+// 6. Appointments
+model Appointment {
+  id        String            @id @default(uuid())
+  patientId String
+  doctorId  String
+  patient   PatientProfile    @relation(fields: [patientId], references: [id])
+  doctor    DoctorProfile     @relation(fields: [doctorId], references: [id])
+  
+  dateTime  DateTime          // The scheduled slot
+  status    AppointmentStatus @default(PENDING)
+  symptoms  String?           // Brief description by patient
+  
+  // Video Call Link (Agora/Twilio/Zoom link)
+  meetingLink String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  prescription Prescription?
+  payment      Payment?
+}
+
+// 7. Medical Records (EHR) & Prescriptions
+model MedicalRecord {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     PatientProfile @relation(fields: [patientId], references: [id])
+  
+  title       String   // e.g., "Blood Test Report - Nov 2025"
+  fileUrl     String   // URL to AWS S3 / Cloudinary
+  uploadedAt  DateTime @default(now())
+}
+
+model Prescription {
+  id            String      @id @default(uuid())
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  
+  diagnosis     String
+  // Storing meds as JSON allows complex structures without extra tables
+  // Format: [{ name: "Paracetamol", dosage: "500mg", frequency: "2x daily" }]
+  medications   Json        
+  notes         String?
+  
+  issuedAt      DateTime    @default(now())
+}
+
+// 8. Payments
+model Payment {
+  id            String      @id @default(uuid())
+  appointmentId String      @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  
+  amount        Decimal     @db.Decimal(10, 2)
+  currency      String      @default("USD")
+  status        String      // "SUCCESS", "FAILED", "PENDING"
+  transactionId String?     // ID from Stripe/Razorpay/PayPal
+  
+  createdAt     DateTime    @default(now())
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  content    String
+  sentAt     DateTime @default(now())
+
+  sender   User @relation("Sender", fields: [senderId], references: [id])
+  receiver User @relation("Receiver", fields: [receiverId], references: [id])
 }
