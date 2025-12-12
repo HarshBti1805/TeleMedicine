@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -8,9 +8,9 @@ export default function ModalScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/(tabs)" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
-      </Link>
+      <ThemedText type="link" onPress={() => router.replace("/(home)/home")}>
+        Go to home screen
+      </ThemedText>
     </ThemedView>
   );
 }

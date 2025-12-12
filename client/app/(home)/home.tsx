@@ -25,13 +25,11 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useNavigation } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function HomeScreen() {
   const [fontsLoaded] = useAppFonts();
-  const navigation = useNavigation();
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {

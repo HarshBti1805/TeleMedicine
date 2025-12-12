@@ -8,6 +8,9 @@ export default function TabLayout() {
         headerShown: false, // hide header
       }}
     >
+      {/* <Stack.Screen name="splash" /> */}
+      {/* <Stack.Screen name="welcome" />
+      <Stack.Screen name="onboarding" /> */}
       <Stack.Screen name="register" />
       <Stack.Screen name="login" />
     </Stack>
