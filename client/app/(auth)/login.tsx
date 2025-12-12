@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback } from "react";
+import { router } from "expo-router";
 import {
   View,
   Text,
@@ -6,11 +7,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { useColorScheme } from "nativewind";
-import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
+import { useAppFonts } from "@/utils/fonts";
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -23,24 +24,19 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { TextInput, Button } from "react-native-paper";
 import { IconSymbol } from "@/components/ui/icon-symbol";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { useNavigation } from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RegisterScreen() {
-  const [fontsLoaded] = useFonts({
-    SpaceMono: require("../../assets/fonts/SpaceMono-Regular.ttf"),
-    BroadWay: require("../../assets/fonts/Broadway.ttf"),
-    Poppins: require("../../assets/fonts/Poppins-Regular.ttf"),
-    NeueRegular: require("../../assets/fonts/NeueMachina-Regular.otf"),
-    NeueBold: require("../../assets/fonts/NeueMachina-Ultrabold.otf"),
-    Gotham: require("../../assets/fonts/Gotham.ttf"),
-    CenturyGothic: require("../../assets/fonts/CenturyGothic.ttf"),
-  });
+export default function LoginScreen() {
+  const [fontsLoaded] = useAppFonts();
+  const { colorScheme } = useColorScheme();
+  const navigation = useNavigation();
+  const isDark = colorScheme === "dark";
+  const primaryColor = isDark ? "#818CF8" : "#6366F1";
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -48,17 +44,10 @@ export default function RegisterScreen() {
     }
   }, [fontsLoaded]);
 
-  const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === "dark";
-  const primaryColor = isDark ? "#818CF8" : "#6366F1";
-
   // Form state (no logic, just UI)
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
 
   // Animations
   const floatAnim = useSharedValue(0);
@@ -87,12 +76,6 @@ export default function RegisterScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   const animatedFloatStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: floatAnim.value }],
@@ -107,6 +90,12 @@ export default function RegisterScreen() {
       opacity,
     };
   });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   return (
     <KeyboardAvoidingView
@@ -158,16 +147,16 @@ export default function RegisterScreen() {
         />
 
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1, paddingVertical: 20 }}
+          contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View className="flex-1 justify-center px-6 py-8">
+          <View className="flex-1 justify-center px-5 py-12">
             {/* Logo Section */}
             <Animated.View
               entering={FadeInDown.delay(200).springify()}
               style={[animatedFloatStyle]}
-              className="items-center mb-6"
+              className="items-center mb-8 "
             >
               <View
                 style={{
@@ -182,20 +171,24 @@ export default function RegisterScreen() {
                 }}
                 className="w-24 h-24 rounded-3xl justify-center items-center mb-4"
               >
-                <AntDesign name="cloud" size={50} color={primaryColor} />
+                <IconSymbol
+                  size={50}
+                  color={primaryColor}
+                  name="lock.shield.fill"
+                />
               </View>
               <Text
                 style={{ fontFamily: "NeueRegular" }}
                 className="text-4xl text-neutral-900 dark:text-white tracking-tighter mb-2"
               >
-                Create Account
+                Welcome Back
               </Text>
               <Text style={{ fontFamily: "NeueRegular" }}>
-                Join Syapse-TeleMedicine and start your journey
+                Sign in to continue to Syapse-TeleMedicine
               </Text>
             </Animated.View>
 
-            {/* Register Form Card */}
+            {/* Login Form Card */}
             <Animated.View entering={FadeInUp.delay(400).springify()}>
               <BlurView
                 intensity={isDark ? 40 : 60}
@@ -210,46 +203,6 @@ export default function RegisterScreen() {
                 }}
               >
                 <View className="p-6 gap-4">
-                  {/* Name Input */}
-                  <View>
-                    <TextInput
-                      label="Full Name"
-                      value={name}
-                      onChangeText={setName}
-                      mode="outlined"
-                      autoCapitalize="words"
-                      autoComplete="name"
-                      left={
-                        <TextInput.Icon
-                          icon={() => (
-                            <IconSymbol
-                              size={20}
-                              color={isDark ? "#9ca3af" : "#6b7280"}
-                              name="person.fill"
-                            />
-                          )}
-                        />
-                      }
-                      style={{
-                        backgroundColor: isDark
-                          ? "rgba(255,255,255,0.05)"
-                          : "rgba(255,255,255,0.8)",
-                      }}
-                      contentStyle={{
-                        color: isDark ? "#fff" : "#000",
-                      }}
-                      theme={{
-                        colors: {
-                          primary: primaryColor,
-                          outline: isDark
-                            ? "rgba(255,255,255,0.2)"
-                            : "rgba(0,0,0,0.2)",
-                          onSurface: isDark ? "#fff" : "#000",
-                        },
-                      }}
-                    />
-                  </View>
-
                   {/* Email Input */}
                   <View>
                     <TextInput
@@ -300,7 +253,7 @@ export default function RegisterScreen() {
                       mode="outlined"
                       secureTextEntry={!showPassword}
                       autoCapitalize="none"
-                      autoComplete="password-new"
+                      autoComplete="password"
                       left={
                         <TextInput.Icon
                           icon={() => (
@@ -346,84 +299,17 @@ export default function RegisterScreen() {
                     />
                   </View>
 
-                  {/* Confirm Password Input */}
-                  <View>
-                    <TextInput
-                      label="Confirm Password"
-                      value={confirmPassword}
-                      onChangeText={setConfirmPassword}
-                      mode="outlined"
-                      secureTextEntry={!showConfirmPassword}
-                      autoCapitalize="none"
-                      autoComplete="password-new"
-                      left={
-                        <TextInput.Icon
-                          icon={() => (
-                            <IconSymbol
-                              size={20}
-                              color={isDark ? "#9ca3af" : "#6b7280"}
-                              name="lock.shield.fill"
-                            />
-                          )}
-                        />
-                      }
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <IconSymbol
-                              size={20}
-                              color={isDark ? "#9ca3af" : "#6b7280"}
-                              name={
-                                showConfirmPassword
-                                  ? "eye.slash.fill"
-                                  : "eye.fill"
-                              }
-                            />
-                          )}
-                          onPress={() =>
-                            setShowConfirmPassword(!showConfirmPassword)
-                          }
-                        />
-                      }
-                      style={{
-                        backgroundColor: isDark
-                          ? "rgba(255,255,255,0.05)"
-                          : "rgba(255,255,255,0.8)",
-                      }}
-                      contentStyle={{
-                        color: isDark ? "#fff" : "#000",
-                      }}
-                      theme={{
-                        colors: {
-                          primary: primaryColor,
-                          outline: isDark
-                            ? "rgba(255,255,255,0.2)"
-                            : "rgba(0,0,0,0.2)",
-                          onSurface: isDark ? "#fff" : "#000",
-                        },
-                      }}
-                    />
-                  </View>
-
-                  {/* Terms and Conditions */}
+                  {/* Forgot Password Link */}
                   <Animated.View
                     entering={FadeInUp.delay(600)}
-                    className="flex-row items-start gap-2"
+                    className="items-end"
                   >
-                    <View className="w-5 h-5 rounded border-2 border-indigo-600 dark:border-indigo-400 mt-0.5" />
-                    <Text className="text-sm text-neutral-600 dark:text-neutral-300 flex-1 leading-5">
-                      By creating an account, you agree to our{" "}
-                      <Text className="text-indigo-600 dark:text-indigo-400 font-semibold">
-                        Terms of Service
-                      </Text>{" "}
-                      and{" "}
-                      <Text className="text-indigo-600 dark:text-indigo-400 font-semibold">
-                        Privacy Policy
-                      </Text>
+                    <Text className="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                      Forgot Password?
                     </Text>
                   </Animated.View>
 
-                  {/* Register Button */}
+                  {/* Login Button */}
                   <Animated.View entering={FadeInUp.delay(700).springify()}>
                     <LinearGradient
                       colors={
@@ -443,7 +329,10 @@ export default function RegisterScreen() {
                     >
                       <Button
                         mode="contained"
-                        onPress={() => {}}
+                        onPress={() => {
+                          router.replace("/(home)/home");
+                          // navigation.navigate("home" as never);
+                        }}
                         style={{
                           paddingVertical: 8,
                           backgroundColor: "transparent",
@@ -457,7 +346,7 @@ export default function RegisterScreen() {
                           color: "#fff",
                         }}
                       >
-                        Create Account
+                        Sign In
                       </Button>
                     </LinearGradient>
                   </Animated.View>
@@ -540,17 +429,21 @@ export default function RegisterScreen() {
               </BlurView>
             </Animated.View>
 
-            {/* Sign In Link */}
+            {/* Sign Up Link */}
             <Animated.View
               entering={FadeInUp.delay(1000)}
               className="flex-row justify-center items-center mt-6 gap-2"
             >
               <Text className="text-base text-neutral-600 dark:text-neutral-300">
-                Already have an account?
+                Don&apos;t have an account?
               </Text>
-              <Text className="text-base font-bold text-indigo-600 dark:text-indigo-400">
-                Sign In
-              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("register" as never)}
+              >
+                <Text className="text-base font-bold text-indigo-600 dark:text-indigo-400">
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
           </View>
         </ScrollView>

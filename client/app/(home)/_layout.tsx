@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import React from "react";
 
@@ -18,18 +17,6 @@ export default function TabLayout() {
         tabBarButton: HapticTab,
       }}
     >
-      <Tabs.Screen
-        name="register"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="login"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
       <Tabs.Screen
         name="home"
         options={{
