@@ -1,6 +1,4 @@
 'use client';
-
-import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Spotlight } from '@/components/ui/spotlight';
@@ -15,11 +13,11 @@ import {
   Video, 
   FileText, 
   Shield, 
-  Clock,
   Stethoscope,
   ArrowRight,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  MessageSquare
 } from 'lucide-react';
 
 export default function Home() {
@@ -61,10 +59,10 @@ export default function Home() {
       gradient: 'from-blue-500 to-cyan-600',
     },
     {
-      icon: <FileText className="w-8 h-8 text-cyan-600" />,
-      title: 'Medical Records',
-      description: 'Secure cloud storage with instant access to patient history, lab results, and imaging.',
-      gradient: 'from-blue-500 to-cyan-600',
+      icon: <MessageSquare className="w-8 h-8 text-emerald-600" />,
+      title: 'Secure Messaging',
+      description: 'HIPAA-compliant messaging system for secure communication with patients and colleagues.',
+      gradient: 'from-emerald-500 to-teal-600',
     },
   ];
 

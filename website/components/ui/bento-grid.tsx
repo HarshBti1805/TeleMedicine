@@ -60,16 +60,19 @@ export const BentoGridItem = ({
               <motion.div
                 whileHover={{ rotate: [0, -10, 10, 0] }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl"
+                className="relative z-20 group-hover/bento:scale-110 transition-transform duration-300"
               >
-                {icon}
+                <div className="absolute -inset-1 bg-white/60 dark:bg-white/20 rounded-lg opacity-0 group-hover/bento:opacity-100 transition-opacity duration-300 blur-sm" />
+                <div className="relative z-10 text-4xl [&>svg]:brightness-100 group-hover/bento:[&>svg]:brightness-110 [&>svg]:drop-shadow-lg group-hover/bento:[&>svg]:drop-shadow-xl [&>svg]:transition-all [&>svg]:duration-300">
+                  {icon}
+                </div>
               </motion.div>
             )}
-            <h3 className="font-neue-bold text-xl text-gray-900 group-hover/bento:text-indigo-600 transition-colors">
+            <h3 className="font-neue-bold text-xl text-gray-900 group-hover/bento:text-white dark:group-hover/bento:text-white-400 transition-colors duration-300">
               {title}
             </h3>
           </div>
-          <p className="text-gray-600 font-poppins text-sm leading-relaxed">
+          <p className="text-gray-600 group-hover/bento:text-gray-800 dark:text-gray-400 dark:group-hover/bento:text-gray-200 font-poppins text-sm leading-relaxed transition-colors duration-300">
             {description}
           </p>
         </div>
