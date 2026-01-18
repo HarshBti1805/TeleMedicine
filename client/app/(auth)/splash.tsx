@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useColorScheme } from "nativewind";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useAppFonts } from "@/utils/fonts";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -17,24 +17,21 @@ import Animated, {
   FadeIn,
   FadeOut,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function SplashScreenComponent() {
-  const navigation = useNavigation();
   const [fontsLoaded] = useAppFonts();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
   const primaryColor = isDark ? "#818CF8" : "#6366F1";
+  const bgColor = isDark ? "#1e1b4b" : "#e0e7ff";
 
   // Animation values
   const scale = useSharedValue(0.5);
-  const rotation = useSharedValue(0);
   const opacity = useSharedValue(0);
   const logoFloat = useSharedValue(0);
-  const pulseScale = useSharedValue(1);
 
   // Loading dots opacity values
   const dotOpacity1 = useSharedValue(1);
@@ -72,34 +69,11 @@ export default function SplashScreenComponent() {
       true
     );
 
-    // Pulse animation
-    pulseScale.value = withRepeat(
-      withSequence(
-        withTiming(1.1, { duration: 1500, easing: Easing.inOut(Easing.sin) }),
-        withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.sin) })
-      ),
-      -1,
-      true
-    );
-
-    // Rotation animation
-    rotation.value = withRepeat(
-      withTiming(360, { duration: 3000, easing: Easing.linear }),
-      -1,
-      false
-    );
-
     // Loading dots animations
     dotOpacity1.value = withRepeat(
       withSequence(
-        withTiming(0.3, {
-          duration: 600,
-          easing: Easing.inOut(Easing.quad),
-        }),
-        withTiming(1, {
-          duration: 600,
-          easing: Easing.inOut(Easing.quad),
-        })
+        withTiming(0.3, { duration: 600, easing: Easing.inOut(Easing.quad) }),
+        withTiming(1, { duration: 600, easing: Easing.inOut(Easing.quad) })
       ),
       -1,
       true
@@ -107,20 +81,8 @@ export default function SplashScreenComponent() {
 
     dotOpacity2.value = withRepeat(
       withSequence(
-        withDelay(
-          200,
-          withTiming(0.3, {
-            duration: 600,
-            easing: Easing.inOut(Easing.quad),
-          })
-        ),
-        withDelay(
-          200,
-          withTiming(1, {
-            duration: 600,
-            easing: Easing.inOut(Easing.quad),
-          })
-        )
+        withDelay(200, withTiming(0.3, { duration: 600, easing: Easing.inOut(Easing.quad) })),
+        withDelay(200, withTiming(1, { duration: 600, easing: Easing.inOut(Easing.quad) }))
       ),
       -1,
       true
@@ -128,20 +90,8 @@ export default function SplashScreenComponent() {
 
     dotOpacity3.value = withRepeat(
       withSequence(
-        withDelay(
-          400,
-          withTiming(0.3, {
-            duration: 600,
-            easing: Easing.inOut(Easing.quad),
-          })
-        ),
-        withDelay(
-          400,
-          withTiming(1, {
-            duration: 600,
-            easing: Easing.inOut(Easing.quad),
-          })
-        )
+        withDelay(400, withTiming(0.3, { duration: 600, easing: Easing.inOut(Easing.quad) })),
+        withDelay(400, withTiming(1, { duration: 600, easing: Easing.inOut(Easing.quad) }))
       ),
       -1,
       true
@@ -149,7 +99,7 @@ export default function SplashScreenComponent() {
 
     // Navigate after animations complete
     const timer = setTimeout(() => {
-      navigation.navigate("welcome" as never);
+      router.replace("/welcome");
     }, 3000);
 
     return () => clearTimeout(timer);
@@ -158,18 +108,8 @@ export default function SplashScreenComponent() {
 
   const animatedLogoStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        { scale: scale.value },
-        { translateY: logoFloat.value },
-        { rotate: `${rotation.value}deg` },
-      ],
+      transform: [{ scale: scale.value }, { translateY: logoFloat.value }],
       opacity: opacity.value,
-    };
-  });
-
-  const animatedPulseStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: pulseScale.value }],
     };
   });
 
@@ -181,82 +121,20 @@ export default function SplashScreenComponent() {
   });
 
   // Loading dots animated styles
-  const dotStyle1 = useAnimatedStyle(() => ({
-    opacity: dotOpacity1.value,
-  }));
-
-  const dotStyle2 = useAnimatedStyle(() => ({
-    opacity: dotOpacity2.value,
-  }));
-
-  const dotStyle3 = useAnimatedStyle(() => ({
-    opacity: dotOpacity3.value,
-  }));
+  const dotStyle1 = useAnimatedStyle(() => ({ opacity: dotOpacity1.value }));
+  const dotStyle2 = useAnimatedStyle(() => ({ opacity: dotOpacity2.value }));
+  const dotStyle3 = useAnimatedStyle(() => ({ opacity: dotOpacity3.value }));
 
   return (
     <View
       className="flex-1"
       onLayout={onLayoutRootView}
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, { backgroundColor: bgColor }]}
     >
-      <LinearGradient
-        colors={
-          isDark
-            ? ["#0f172a", "#1e1b4b", "#312e81"]
-            : ["#f8fafc", "#e0e7ff", "#c7d2fe"]
-        }
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {/* Animated background blobs */}
-      <Animated.View
-        style={[
-          animatedPulseStyle,
-          {
-            position: "absolute",
-            top: -150,
-            right: -150,
-            width: 500,
-            height: 500,
-            borderRadius: 250,
-            backgroundColor: isDark ? "#4f46e5" : "#818cf8",
-            opacity: 0.3,
-          },
-        ]}
-      />
-      <Animated.View
-        style={[
-          animatedPulseStyle,
-          {
-            position: "absolute",
-            bottom: -100,
-            left: -100,
-            width: 400,
-            height: 400,
-            borderRadius: 200,
-            backgroundColor: isDark ? "#818cf8" : "#4f46e5",
-            opacity: 0.2,
-          },
-        ]}
-      />
-
       {/* Main content */}
       <View className="flex-1 justify-center items-center">
-        {/* Logo container with glow effect */}
-        <Animated.View
-          style={[
-            animatedLogoStyle,
-            {
-              shadowColor: primaryColor,
-              shadowOffset: { width: 0, height: 20 },
-              shadowOpacity: 0.6,
-              shadowRadius: 30,
-              elevation: 20,
-            },
-          ]}
-        >
+        {/* Logo container */}
+        <Animated.View style={animatedLogoStyle}>
           <View
             style={{
               width: 120,
@@ -292,44 +170,16 @@ export default function SplashScreenComponent() {
         </Animated.View>
 
         {/* Loading indicator */}
-        <Animated.View
-          entering={FadeIn.delay(1500)}
-          exiting={FadeOut}
-          className="mt-12"
-        >
+        <Animated.View entering={FadeIn.delay(1500)} exiting={FadeOut} className="mt-12">
           <View className="flex-row gap-2">
             <Animated.View
-              style={[
-                {
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  backgroundColor: primaryColor,
-                },
-                dotStyle1,
-              ]}
+              style={[{ width: 10, height: 10, borderRadius: 5, backgroundColor: primaryColor }, dotStyle1]}
             />
             <Animated.View
-              style={[
-                {
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  backgroundColor: primaryColor,
-                },
-                dotStyle2,
-              ]}
+              style={[{ width: 10, height: 10, borderRadius: 5, backgroundColor: primaryColor }, dotStyle2]}
             />
             <Animated.View
-              style={[
-                {
-                  width: 10,
-                  height: 10,
-                  borderRadius: 5,
-                  backgroundColor: primaryColor,
-                },
-                dotStyle3,
-              ]}
+              style={[{ width: 10, height: 10, borderRadius: 5, backgroundColor: primaryColor }, dotStyle3]}
             />
           </View>
         </Animated.View>

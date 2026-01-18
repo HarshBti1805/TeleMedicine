@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useColorScheme } from "nativewind";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useAppFonts } from "@/utils/fonts";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -21,130 +21,82 @@ import Animated, {
   interpolate,
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
-import { IconSymbol } from "@/components/ui/icon-symbol";
+import { Feather } from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync();
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 interface OnboardingSlide {
   title: string;
+  subtitle: string;
   description: string;
-  icon: string;
-  gradient: [string, string];
+  icon: "users" | "folder" | "trending-up";
+  color: string;
+  secondaryColor: string;
 }
 
 const slides: OnboardingSlide[] = [
   {
-    title: "Connect with Healthcare Professionals",
+    title: "Connect",
+    subtitle: "with Healthcare Professionals",
     description:
       "Access qualified doctors and specialists from the comfort of your home. Schedule appointments and get medical consultations instantly.",
-    icon: "person.2.fill",
-    gradient: ["#6366f1", "#8b5cf6"],
+    icon: "users",
+    color: "#6366f1",
+    secondaryColor: "#818CF8",
   },
   {
-    title: "Manage Your Health Records",
+    title: "Manage",
+    subtitle: "Your Health Records",
     description:
       "Keep all your medical records, prescriptions, and test results organized in one secure place. Access them anytime, anywhere.",
-    icon: "doc.text.fill",
-    gradient: ["#8b5cf6", "#ec4899"],
+    icon: "folder",
+    color: "#8b5cf6",
+    secondaryColor: "#A78BFA",
   },
   {
-    title: "Track Your Health Journey",
+    title: "Track",
+    subtitle: "Your Health Journey",
     description:
       "Monitor your health metrics, set medication reminders, and track your wellness progress with our smart analytics dashboard.",
-    icon: "chart.line.uptrend.xyaxis",
-    gradient: ["#ec4899", "#f59e0b"],
+    icon: "trending-up",
+    color: "#ec4899",
+    secondaryColor: "#F472B6",
   },
 ];
 
-// Pagination dots component
+// Animated pagination dots component
 const PaginationDots = ({
+  currentIndex,
   slides,
-  scrollX,
-  primaryColor,
-  width,
 }: {
+  currentIndex: number;
   slides: OnboardingSlide[];
-  scrollX: ReturnType<typeof useSharedValue<number>>;
-  primaryColor: string;
-  width: number;
 }) => {
   return (
-    <View className="absolute top-20 left-0 right-0 flex-row justify-center gap-2">
-      {slides.map((_, index) => {
-        return (
-          <PaginationDot
-            key={index}
-            index={index}
-            scrollX={scrollX}
-            primaryColor={primaryColor}
-            width={width}
-          />
-        );
-      })}
+    <View className="flex-row justify-center gap-3 mb-8">
+      {slides.map((slide, index) => (
+        <View
+          key={index}
+          style={{
+            height: 6,
+            width: currentIndex === index ? 32 : 6,
+            borderRadius: 3,
+            backgroundColor: currentIndex === index ? slide.color : "#d1d5db",
+            opacity: currentIndex === index ? 1 : 0.5,
+          }}
+        />
+      ))}
     </View>
   );
 };
 
-// Individual pagination dot component
-const PaginationDot = ({
-  index,
-  scrollX,
-  primaryColor,
-  width,
-}: {
-  index: number;
-  scrollX: ReturnType<typeof useSharedValue<number>>;
-  primaryColor: string;
-  width: number;
-}) => {
-  const dotAnimatedStyle = useAnimatedStyle(() => {
-    const inputRange = [
-      (index - 1) * width,
-      index * width,
-      (index + 1) * width,
-    ];
-    const widthValue = interpolate(
-      scrollX.value,
-      inputRange,
-      [8, 24, 8],
-      "clamp"
-    );
-    const opacityValue = interpolate(
-      scrollX.value,
-      inputRange,
-      [0.3, 1, 0.3],
-      "clamp"
-    );
-    return {
-      width: widthValue,
-      opacity: opacityValue,
-    };
-  });
-
-  return (
-    <Animated.View
-      style={[
-        {
-          height: 8,
-          borderRadius: 4,
-          backgroundColor: primaryColor,
-        },
-        dotAnimatedStyle,
-      ]}
-    />
-  );
-};
-
 export default function OnboardingScreen() {
-  const navigation = useNavigation();
   const [fontsLoaded] = useAppFonts();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
-  const primaryColor = isDark ? "#818CF8" : "#6366F1";
+  const bgColor = isDark ? "#0f172a" : "#f8fafc";
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollViewRef = React.useRef<Animated.ScrollView>(null);
@@ -153,6 +105,8 @@ export default function OnboardingScreen() {
   // Animation values
   const floatAnim = useSharedValue(0);
   const pulseAnim = useSharedValue(0);
+
+  const currentSlide = slides[currentIndex];
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -164,14 +118,14 @@ export default function OnboardingScreen() {
     // Floating animation
     floatAnim.value = withRepeat(
       withSequence(
-        withTiming(-15, { duration: 2000, easing: Easing.inOut(Easing.quad) }),
+        withTiming(-10, { duration: 2000, easing: Easing.inOut(Easing.quad) }),
         withTiming(0, { duration: 2000, easing: Easing.inOut(Easing.quad) })
       ),
       -1,
       true
     );
 
-    // Pulse animation
+    // Pulse animation for background
     pulseAnim.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.sin) }),
@@ -196,12 +150,9 @@ export default function OnboardingScreen() {
   };
 
   const animatedPulseStyle = useAnimatedStyle(() => {
-    const scale = interpolate(pulseAnim.value, [0, 1], [1, 1.1]);
-    const opacity = interpolate(pulseAnim.value, [0, 1], [0.3, 0.5]);
-    return {
-      transform: [{ scale }],
-      opacity,
-    };
+    const scale = interpolate(pulseAnim.value, [0, 1], [1, 1.15]);
+    const opacity = interpolate(pulseAnim.value, [0, 1], [0.1, 0.2]);
+    return { transform: [{ scale }], opacity };
   });
 
   const goToNext = () => {
@@ -211,7 +162,7 @@ export default function OnboardingScreen() {
         animated: true,
       });
     } else {
-      navigation.navigate("register" as never);
+      router.push("/register");
     }
   };
 
@@ -224,7 +175,7 @@ export default function OnboardingScreen() {
     }
   };
 
-  // Slide component to properly use hooks
+  // Slide component
   const SlideComponent = ({
     slide,
     index,
@@ -243,75 +194,100 @@ export default function OnboardingScreen() {
     ];
 
     const animatedSlideStyle = useAnimatedStyle(() => {
-      const scale = interpolate(
-        scrollX.value,
-        inputRange,
-        [0.8, 1, 0.8],
-        "clamp"
-      );
-      const opacity = interpolate(
-        scrollX.value,
-        inputRange,
-        [0.5, 1, 0.5],
-        "clamp"
-      );
-      return {
-        transform: [{ scale }],
-        opacity,
-      };
+      const scale = interpolate(scrollX.value, inputRange, [0.85, 1, 0.85], "clamp");
+      const opacity = interpolate(scrollX.value, inputRange, [0.4, 1, 0.4], "clamp");
+      return { transform: [{ scale }], opacity };
     });
 
     const animatedFloatStyle = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateY: floatAnim.value }],
-      };
+      return { transform: [{ translateY: floatAnim.value }] };
     });
 
     return (
       <View style={{ width }} className="flex-1 justify-center px-8">
         <Animated.View style={animatedSlideStyle} className="items-center">
-          {/* Icon container */}
-          <Animated.View
-            style={[
-              animatedFloatStyle,
-              {
-                shadowColor: slide.gradient[0],
-                shadowOffset: { width: 0, height: 20 },
-                shadowOpacity: 0.5,
-                shadowRadius: 30,
-                elevation: 20,
-              },
-            ]}
-            className="mb-12"
-          >
-            <LinearGradient
-              colors={slide.gradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
+          {/* Icon container with glow effect */}
+          <Animated.View style={animatedFloatStyle} className="mb-10">
+            {/* Outer glow ring */}
+            <View
               style={{
-                width: 140,
-                height: 140,
-                borderRadius: 40,
+                width: 180,
+                height: 180,
+                borderRadius: 60,
+                backgroundColor: `${slide.color}15`,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <IconSymbol size={70} color="#fff" name={slide.icon as any} />
-            </LinearGradient>
+              {/* Middle ring */}
+              <View
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 50,
+                  backgroundColor: `${slide.color}25`,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {/* Inner container */}
+                <View
+                  style={{
+                    width: 110,
+                    height: 110,
+                    borderRadius: 35,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: slide.color,
+                    shadowColor: slide.color,
+                    shadowOffset: { width: 0, height: 10 },
+                    shadowOpacity: 0.4,
+                    shadowRadius: 20,
+                    elevation: 12,
+                  }}
+                >
+                  <Feather name={slide.icon} size={50} color="#fff" />
+                </View>
+              </View>
+            </View>
           </Animated.View>
+
+          {/* Step indicator */}
+          <View
+            style={{
+              backgroundColor: `${slide.color}20`,
+              paddingHorizontal: 16,
+              paddingVertical: 6,
+              borderRadius: 20,
+              marginBottom: 16,
+            }}
+          >
+            <Text
+              style={{ fontFamily: "NeueRegular", color: slide.color }}
+              className="text-sm"
+            >
+              Step {index + 1} of {slides.length}
+            </Text>
+          </View>
 
           {/* Title */}
           <Text
-            style={{ fontFamily: "NeueRegular" }}
-            className="text-4xl font-bold text-neutral-900 dark:text-white text-center mb-6 leading-tight"
+            style={{ fontFamily: "NeueBold", color: slide.color }}
+            className="text-5xl text-center mb-1"
           >
             {slide.title}
+          </Text>
+          <Text
+            style={{ fontFamily: "NeueBold" }}
+            className="text-2xl text-neutral-800 dark:text-neutral-100 text-center mb-5"
+          >
+            {slide.subtitle}
           </Text>
 
           {/* Description */}
           <Text
-            style={{ fontFamily: "NeueRegular" }}
-            className="text-lg text-neutral-600 dark:text-neutral-300 text-center leading-7 px-4"
+            style={{ fontFamily: "NeueRegular", lineHeight: 26 }}
+            className="text-base text-neutral-500 dark:text-neutral-400 text-center px-2"
           >
             {slide.description}
           </Text>
@@ -324,31 +300,20 @@ export default function OnboardingScreen() {
     <View
       className="flex-1"
       onLayout={onLayoutRootView}
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, { backgroundColor: bgColor }]}
     >
-      <LinearGradient
-        colors={
-          isDark
-            ? ["#0f172a", "#1e1b4b", "#312e81"]
-            : ["#f8fafc", "#e0e7ff", "#c7d2fe"]
-        }
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {/* Animated background elements */}
+      {/* Animated background decorations */}
       <Animated.View
         style={[
           animatedPulseStyle,
           {
             position: "absolute",
-            top: -100,
-            right: -100,
-            width: 400,
-            height: 400,
-            borderRadius: 200,
-            backgroundColor: isDark ? "#4f46e5" : "#818cf8",
+            top: -height * 0.12,
+            right: -width * 0.25,
+            width: width * 0.7,
+            height: width * 0.7,
+            borderRadius: width * 0.35,
+            backgroundColor: currentSlide.color,
           },
         ]}
       />
@@ -357,25 +322,32 @@ export default function OnboardingScreen() {
           animatedPulseStyle,
           {
             position: "absolute",
-            bottom: -50,
-            left: -100,
-            width: 300,
-            height: 300,
-            borderRadius: 150,
-            backgroundColor: isDark ? "#818cf8" : "#4f46e5",
+            bottom: -height * 0.08,
+            left: -width * 0.2,
+            width: width * 0.5,
+            height: width * 0.5,
+            borderRadius: width * 0.25,
+            backgroundColor: currentSlide.secondaryColor,
+            opacity: 0.1,
           },
         ]}
       />
 
       {/* Skip button */}
-      <View className="absolute top-12 right-6 z-10">
+      <View className="absolute top-14 right-6 z-10">
         <TouchableOpacity
-          onPress={() => navigation.navigate("register" as never)}
+          onPress={() => router.push("/register")}
           activeOpacity={0.7}
+          style={{
+            backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)",
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 20,
+          }}
         >
           <Text
             style={{ fontFamily: "NeueRegular" }}
-            className="text-base text-neutral-600 dark:text-neutral-300"
+            className="text-sm text-neutral-600 dark:text-neutral-300"
           >
             Skip
           </Text>
@@ -392,6 +364,7 @@ export default function OnboardingScreen() {
         onMomentumScrollEnd={handleMomentumScrollEnd}
         scrollEventThrottle={16}
         className="flex-1"
+        contentContainerStyle={{ paddingTop: height * 0.08 }}
       >
         {slides.map((slide, index) => (
           <SlideComponent
@@ -404,71 +377,74 @@ export default function OnboardingScreen() {
         ))}
       </Animated.ScrollView>
 
-      {/* Pagination dots */}
-      <PaginationDots
-        slides={slides}
-        scrollX={scrollX}
-        primaryColor={primaryColor}
-        width={width}
-      />
+      {/* Bottom section */}
+      <View className="px-8 pb-10">
+        {/* Pagination dots */}
+        <PaginationDots currentIndex={currentIndex} slides={slides} />
 
-      {/* Navigation buttons */}
-      <View className="absolute bottom-12 left-0 right-0 px-8">
+        {/* Navigation buttons */}
         <View className="flex-row gap-4">
           {currentIndex > 0 && (
             <TouchableOpacity
               onPress={goToPrevious}
               activeOpacity={0.8}
               className="flex-1"
+              style={{
+                borderRadius: 16,
+                paddingVertical: 18,
+                borderWidth: 1.5,
+                borderColor: isDark
+                  ? `${currentSlide.color}50`
+                  : `${currentSlide.color}40`,
+                backgroundColor: isDark
+                  ? `${currentSlide.color}10`
+                  : `${currentSlide.color}08`,
+              }}
             >
-              <BlurView
-                intensity={isDark ? 40 : 60}
-                tint={isDark ? "dark" : "light"}
-                style={{
-                  borderRadius: 20,
-                  paddingVertical: 16,
-                  borderWidth: 1,
-                  borderColor: isDark
-                    ? "rgba(255,255,255,0.2)"
-                    : "rgba(0,0,0,0.1)",
-                }}
-              >
+              <View className="flex-row items-center justify-center gap-2">
+                <Feather
+                  name="arrow-left"
+                  size={18}
+                  color={currentSlide.color}
+                />
                 <Text
-                  style={{ fontFamily: "NeueRegular" }}
-                  className="text-center text-neutral-900 dark:text-white text-lg font-semibold"
+                  style={{ fontFamily: "NeueRegular", color: currentSlide.color }}
+                  className="text-center text-lg"
                 >
                   Back
                 </Text>
-              </BlurView>
+              </View>
             </TouchableOpacity>
           )}
 
           <TouchableOpacity
             onPress={goToNext}
-            activeOpacity={0.8}
-            className={currentIndex > 0 ? "flex-1" : "flex-1"}
+            activeOpacity={0.85}
+            className="flex-1"
+            style={{
+              backgroundColor: currentSlide.color,
+              borderRadius: 16,
+              paddingVertical: 18,
+              shadowColor: currentSlide.color,
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.3,
+              shadowRadius: 16,
+              elevation: 8,
+            }}
           >
-            <LinearGradient
-              colors={isDark ? ["#4f46e5", "#4338ca"] : ["#6366f1", "#4f46e5"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                borderRadius: 20,
-                paddingVertical: 16,
-                shadowColor: "#4f46e5",
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.3,
-                shadowRadius: 16,
-                elevation: 8,
-              }}
-            >
+            <View className="flex-row items-center justify-center gap-2">
               <Text
                 style={{ fontFamily: "NeueRegular" }}
-                className="text-center text-white text-lg font-semibold"
+                className="text-center text-white text-lg"
               >
-                {currentIndex === slides.length - 1 ? "Get Started" : "Next"}
+                {currentIndex === slides.length - 1 ? "Get Started" : "Continue"}
               </Text>
-            </LinearGradient>
+              <Feather
+                name={currentIndex === slides.length - 1 ? "check" : "arrow-right"}
+                size={18}
+                color="#fff"
+              />
+            </View>
           </TouchableOpacity>
         </View>
       </View>

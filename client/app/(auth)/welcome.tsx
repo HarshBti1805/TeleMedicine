@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { useColorScheme } from "nativewind";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useAppFonts } from "@/utils/fonts";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -18,29 +18,29 @@ import Animated, {
   withTiming,
   withSequence,
   Easing,
-  interpolate,
   FadeInDown,
   FadeInUp,
+  interpolate,
 } from "react-native-reanimated";
-import { LinearGradient } from "expo-linear-gradient";
-import { BlurView } from "expo-blur";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Feather } from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync();
 
 const { width, height } = Dimensions.get("window");
 
 export default function WelcomeScreen() {
-  const navigation = useNavigation();
   const [fontsLoaded] = useAppFonts();
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
   const primaryColor = isDark ? "#818CF8" : "#6366F1";
+  const secondaryColor = isDark ? "#A78BFA" : "#8B5CF6";
+  const bgColor = isDark ? "#0f172a" : "#f8fafc";
 
   // Animation values
   const floatAnim = useSharedValue(0);
   const pulseAnim = useSharedValue(0);
-  const waveAnim = useSharedValue(0);
+  const rotateAnim = useSharedValue(0);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -52,87 +52,64 @@ export default function WelcomeScreen() {
     // Floating animation
     floatAnim.value = withRepeat(
       withSequence(
-        withTiming(-20, { duration: 2500, easing: Easing.inOut(Easing.quad) }),
-        withTiming(0, { duration: 2500, easing: Easing.inOut(Easing.quad) })
+        withTiming(-12, { duration: 2000, easing: Easing.inOut(Easing.quad) }),
+        withTiming(0, { duration: 2000, easing: Easing.inOut(Easing.quad) })
       ),
       -1,
       true
     );
 
-    // Pulse animation
+    // Pulse animation for decorative elements
     pulseAnim.value = withRepeat(
       withSequence(
-        withTiming(1, { duration: 3000, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0, { duration: 3000, easing: Easing.inOut(Easing.sin) })
+        withTiming(1, { duration: 2500, easing: Easing.inOut(Easing.sin) }),
+        withTiming(0, { duration: 2500, easing: Easing.inOut(Easing.sin) })
       ),
       -1,
       true
     );
 
-    // Wave animation
-    waveAnim.value = withRepeat(
-      withTiming(1, { duration: 4000, easing: Easing.linear }),
+    // Slow rotation for background elements
+    rotateAnim.value = withRepeat(
+      withTiming(360, { duration: 20000, easing: Easing.linear }),
       -1,
       false
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const animatedFloatStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: floatAnim.value }],
-    };
-  });
+  const animatedFloatStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: floatAnim.value }],
+  }));
 
   const animatedPulseStyle = useAnimatedStyle(() => {
-    const scale = interpolate(pulseAnim.value, [0, 1], [1, 1.15]);
-    const opacity = interpolate(pulseAnim.value, [0, 1], [0.4, 0.7]);
-    return {
-      transform: [{ scale }],
-      opacity,
-    };
+    const scale = interpolate(pulseAnim.value, [0, 1], [1, 1.1]);
+    const opacity = interpolate(pulseAnim.value, [0, 1], [0.15, 0.25]);
+    return { transform: [{ scale }], opacity };
   });
 
-  const animatedWaveStyle = useAnimatedStyle(() => {
-    const translateX = interpolate(
-      waveAnim.value,
-      [0, 1],
-      [-width * 0.3, width * 0.3]
-    );
-    return {
-      transform: [{ translateX }],
-    };
-  });
+  const animatedRotateStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotateAnim.value}deg` }],
+  }));
 
   return (
     <View
       className="flex-1"
       onLayout={onLayoutRootView}
-      style={StyleSheet.absoluteFill}
+      style={[StyleSheet.absoluteFill, { backgroundColor: bgColor }]}
     >
-      <LinearGradient
-        colors={
-          isDark
-            ? ["#0f172a", "#1e1b4b", "#312e81"]
-            : ["#f8fafc", "#e0e7ff", "#c7d2fe"]
-        }
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {/* Animated background elements */}
+      {/* Decorative background circles */}
       <Animated.View
         style={[
           animatedPulseStyle,
           {
             position: "absolute",
-            top: -100,
-            right: -100,
-            width: 400,
-            height: 400,
-            borderRadius: 200,
-            backgroundColor: isDark ? "#4f46e5" : "#818cf8",
+            top: -height * 0.15,
+            right: -width * 0.3,
+            width: width * 0.8,
+            height: width * 0.8,
+            borderRadius: width * 0.4,
+            backgroundColor: primaryColor,
           },
         ]}
       />
@@ -141,135 +118,255 @@ export default function WelcomeScreen() {
           animatedPulseStyle,
           {
             position: "absolute",
-            bottom: -50,
-            left: -100,
-            width: 300,
-            height: 300,
-            borderRadius: 150,
-            backgroundColor: isDark ? "#818cf8" : "#4f46e5",
+            bottom: -height * 0.1,
+            left: -width * 0.25,
+            width: width * 0.6,
+            height: width * 0.6,
+            borderRadius: width * 0.3,
+            backgroundColor: secondaryColor,
+            opacity: 0.12,
           },
         ]}
       />
 
-      {/* Wave decoration */}
+      {/* Floating decorative icons */}
       <Animated.View
         style={[
-          animatedWaveStyle,
+          animatedRotateStyle,
           {
             position: "absolute",
-            bottom: height * 0.15,
-            width: width * 1.5,
-            height: 100,
-            backgroundColor: isDark
-              ? "rgba(129, 140, 248, 0.1)"
-              : "rgba(99, 102, 241, 0.1)",
-            borderRadius: 50,
+            top: height * 0.12,
+            left: width * 0.1,
+            opacity: 0.15,
           },
         ]}
-      />
+      >
+        <Feather name="heart" size={28} color={primaryColor} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          animatedFloatStyle,
+          {
+            position: "absolute",
+            top: height * 0.18,
+            right: width * 0.12,
+            opacity: 0.15,
+          },
+        ]}
+      >
+        <Feather name="activity" size={24} color={secondaryColor} />
+      </Animated.View>
+      <Animated.View
+        style={[
+          animatedRotateStyle,
+          {
+            position: "absolute",
+            bottom: height * 0.22,
+            right: width * 0.08,
+            opacity: 0.12,
+          },
+        ]}
+      >
+        <Feather name="shield" size={26} color={primaryColor} />
+      </Animated.View>
 
-      <View className="flex-1 justify-center px-6">
+      <View className="flex-1 justify-center px-8">
         {/* Logo section */}
         <Animated.View
           entering={FadeInDown.delay(200).springify()}
           style={[animatedFloatStyle]}
-          className="items-center mb-12"
+          className="items-center mb-10"
         >
+          {/* Outer glow ring */}
           <View
             style={{
-              shadowColor: primaryColor,
-              shadowOffset: { width: 0, height: 20 },
-              shadowOpacity: 0.6,
-              shadowRadius: 30,
-              elevation: 20,
+              width: 160,
+              height: 160,
+              borderRadius: 48,
               backgroundColor: isDark
-                ? "rgba(129, 140, 248, 0.3)"
-                : "rgba(99, 102, 241, 0.2)",
+                ? "rgba(129, 140, 248, 0.08)"
+                : "rgba(99, 102, 241, 0.08)",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            className="w-32 h-32 rounded-3xl justify-center items-center mb-6"
           >
-            <AntDesign name="cloud" size={80} color={primaryColor} />
+            {/* Inner container */}
+            <View
+              style={{
+                width: 130,
+                height: 130,
+                borderRadius: 40,
+                backgroundColor: isDark
+                  ? "rgba(129, 140, 248, 0.2)"
+                  : "rgba(99, 102, 241, 0.15)",
+                justifyContent: "center",
+                alignItems: "center",
+                borderWidth: 2,
+                borderColor: isDark
+                  ? "rgba(129, 140, 248, 0.3)"
+                  : "rgba(99, 102, 241, 0.2)",
+              }}
+            >
+              <AntDesign name="medicine-box" size={65} color={primaryColor} />
+            </View>
           </View>
         </Animated.View>
 
         {/* Welcome text */}
         <Animated.View entering={FadeInUp.delay(400).springify()}>
           <Text
-            style={{ fontFamily: "NeueRegular" }}
-            className="text-5xl font-bold text-neutral-900 dark:text-white tracking-tight mb-4 text-center"
+            style={{ fontFamily: "NeueBold" }}
+            className="text-4xl text-neutral-800 dark:text-neutral-100 tracking-tight mb-2 text-center"
           >
             Welcome to
           </Text>
           <Text
-            style={{ fontFamily: "NeueRegular" }}
-            className="text-5xl font-bold text-indigo-600 dark:text-indigo-400 tracking-tight mb-6 text-center"
+            style={{ 
+              fontFamily: "NeueBold",
+              color: primaryColor,
+            }}
+            className="text-5xl tracking-tight mb-5 text-center"
           >
             TellerHub
           </Text>
           <Text
-            style={{ fontFamily: "NeueRegular" }}
-            className="text-lg text-neutral-600 dark:text-neutral-300 text-center px-4 leading-6"
+            style={{ fontFamily: "NeueRegular", lineHeight: 26 }}
+            className="text-base text-neutral-500 dark:text-neutral-400 text-center px-2"
           >
             Your trusted companion for seamless telemedicine experiences.
             Connect with healthcare professionals from anywhere, anytime.
           </Text>
         </Animated.View>
 
+        {/* Feature highlights */}
+        <Animated.View
+          entering={FadeInUp.delay(500).springify()}
+          className="mt-8 mb-10"
+        >
+          <View className="flex-row justify-center gap-6">
+            <View className="items-center">
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: isDark
+                    ? "rgba(129, 140, 248, 0.15)"
+                    : "rgba(99, 102, 241, 0.1)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Feather name="video" size={22} color={primaryColor} />
+              </View>
+              <Text
+                style={{ fontFamily: "NeueRegular" }}
+                className="text-xs text-neutral-500 dark:text-neutral-400"
+              >
+                Video Calls
+              </Text>
+            </View>
+            <View className="items-center">
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: isDark
+                    ? "rgba(167, 139, 250, 0.15)"
+                    : "rgba(139, 92, 246, 0.1)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Feather name="calendar" size={22} color={secondaryColor} />
+              </View>
+              <Text
+                style={{ fontFamily: "NeueRegular" }}
+                className="text-xs text-neutral-500 dark:text-neutral-400"
+              >
+                Appointments
+              </Text>
+            </View>
+            <View className="items-center">
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 16,
+                  backgroundColor: isDark
+                    ? "rgba(129, 140, 248, 0.15)"
+                    : "rgba(99, 102, 241, 0.1)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 8,
+                }}
+              >
+                <Feather name="file-text" size={22} color={primaryColor} />
+              </View>
+              <Text
+                style={{ fontFamily: "NeueRegular" }}
+                className="text-xs text-neutral-500 dark:text-neutral-400"
+              >
+                Health Records
+              </Text>
+            </View>
+          </View>
+        </Animated.View>
+
         {/* Action buttons */}
         <Animated.View
           entering={FadeInUp.delay(600).springify()}
-          className="mt-12 gap-4"
+          className="gap-4"
         >
           <TouchableOpacity
-            onPress={() => navigation.navigate("onboarding" as never)}
-            activeOpacity={0.8}
+            onPress={() => router.push("/onboarding")}
+            activeOpacity={0.85}
+            style={{
+              backgroundColor: primaryColor,
+              borderRadius: 16,
+              paddingVertical: 18,
+              shadowColor: primaryColor,
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.25,
+              shadowRadius: 16,
+              elevation: 8,
+            }}
           >
-            <LinearGradient
-              colors={isDark ? ["#4f46e5", "#4338ca"] : ["#6366f1", "#4f46e5"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{
-                borderRadius: 20,
-                paddingVertical: 18,
-                shadowColor: "#4f46e5",
-                shadowOffset: { width: 0, height: 8 },
-                shadowOpacity: 0.3,
-                shadowRadius: 16,
-                elevation: 8,
-              }}
-            >
+            <View className="flex-row items-center justify-center gap-2">
               <Text
                 style={{ fontFamily: "NeueRegular" }}
                 className="text-center text-white text-lg font-semibold"
               >
                 Get Started
               </Text>
-            </LinearGradient>
+              <Feather name="arrow-right" size={20} color="#fff" />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("register" as never)}
+            onPress={() => router.push("/register")}
             activeOpacity={0.8}
+            style={{
+              borderRadius: 16,
+              paddingVertical: 18,
+              borderWidth: 1.5,
+              borderColor: isDark
+                ? "rgba(129, 140, 248, 0.4)"
+                : "rgba(99, 102, 241, 0.3)",
+              backgroundColor: isDark
+                ? "rgba(129, 140, 248, 0.08)"
+                : "rgba(99, 102, 241, 0.05)",
+            }}
           >
-            <BlurView
-              intensity={isDark ? 40 : 60}
-              tint={isDark ? "dark" : "light"}
-              style={{
-                borderRadius: 20,
-                paddingVertical: 18,
-                borderWidth: 1,
-                borderColor: isDark
-                  ? "rgba(255,255,255,0.2)"
-                  : "rgba(0,0,0,0.1)",
-              }}
+            <Text
+              style={{ fontFamily: "NeueRegular", color: primaryColor }}
+              className="text-center text-lg font-semibold"
             >
-              <Text
-                style={{ fontFamily: "NeueRegular" }}
-                className="text-center text-neutral-900 dark:text-white text-lg font-semibold"
-              >
-                Skip to Register
-              </Text>
-            </BlurView>
+              Skip to Register
+            </Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
