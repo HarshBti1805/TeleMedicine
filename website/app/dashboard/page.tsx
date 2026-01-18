@@ -149,7 +149,7 @@ export default function Dashboard() {
             <Stethoscope className="w-6 h-6 text-white" />
           </div>
           <span className="text-xl font-neue-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Tele-Medicine
+            Synapse-TeleMedicine
           </span>
         </div>
 

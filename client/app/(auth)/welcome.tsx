@@ -227,7 +227,7 @@ export default function WelcomeScreen() {
             }}
             className="text-5xl tracking-tight mb-5 text-center"
           >
-            TellerHub
+            Synapse-TeleMedicine
           </Text>
           <Text
             style={{ fontFamily: "NeueRegular", lineHeight: 26 }}

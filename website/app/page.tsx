@@ -60,6 +60,12 @@ export default function Home() {
       description: 'Secure cloud storage with instant access to patient history, lab results, and imaging.',
       gradient: 'from-blue-500 to-cyan-600',
     },
+    {
+      icon: <FileText className="w-8 h-8 text-cyan-600" />,
+      title: 'Medical Records',
+      description: 'Secure cloud storage with instant access to patient history, lab results, and imaging.',
+      gradient: 'from-blue-500 to-cyan-600',
+    },
   ];
 
   const stats = [
@@ -99,7 +105,7 @@ export default function Home() {
               <Stethoscope className="w-6 h-6 text-white" />
             </div>
             <span className="text-2xl font-neue-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Tele-Medicine
+              Synapse-TeleMedicine
             </span>
           </motion.div>
           <div className="flex gap-4 items-center">
@@ -278,10 +284,10 @@ export default function Home() {
                   Ready to Transform Your Practice?
                 </h2>
                 <p className="text-xl text-white/80 mb-8 font-poppins">
-                  Join thousands of healthcare professionals who have already modernized their practice with Tele-Medicine.
+                  Join thousands of healthcare professionals who have already modernized their practice with Synapse-TeleMedicine.
                 </p>
                 <Link href="/register">
-                  <Button size="lg" className="bg-white text-indigo-600 hover:bg-white/90 font-neue-bold shadow-2xl">
+                  <Button size="lg" className="bg-white text-white hover:bg-white/90 font-neue-bold shadow-2xl">
                     Get Started Free
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
@@ -315,9 +321,9 @@ export default function Home() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
               <Stethoscope className="w-5 h-5 text-white" />
             </div>
-            <span className="font-neue-bold text-white">Tele-Medicine</span>
+            <span className="font-neue-bold text-white">Synapse-TeleMedicine</span>
           </div>
-          <p className="font-poppins text-sm">© 2024 Tele-Medicine. All rights reserved.</p>
+          <p className="font-poppins text-sm">© 2024 Synapse-TeleMedicine. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="#" className="hover:text-white transition-colors font-poppins text-sm">Privacy</Link>
             <Link href="#" className="hover:text-white transition-colors font-poppins text-sm">Terms</Link>

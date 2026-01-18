@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Tele-Medicine - Doctors Portal",
+  title: "Synapse-TeleMedicine - Doctors Portal",
   description: "Comprehensive telemedicine platform for healthcare professionals",
 };
 

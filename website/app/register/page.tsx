@@ -90,7 +90,7 @@ export default function Register() {
               Create Account
             </CardTitle>
             <CardDescription className="text-base">
-              Join Tele-Medicine and transform your practice
+              Join Synapse-TeleMedicine and transform your practice
             </CardDescription>
             
             {/* Progress Indicator */}
