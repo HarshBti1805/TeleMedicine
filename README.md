@@ -1,10 +1,10 @@
-# Syapse-TeleMedicine - AI-Powered Healthcare Platform
+# Synapse-TeleMedicine - AI-Powered Healthcare Platform
 
 A comprehensive React Native telemedicine application built with Expo that provides advanced healthcare monitoring, communication, and AI-assisted diagnosis for patients with physical conditions.
 
 ## 🏥 Overview
 
-Syapse-TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the gap between patients and healthcare providers through innovative technology. The app combines real-time monitoring, AI-powered assistance, and seamless communication to deliver comprehensive healthcare services.
+Synapse-TeleMedicine is a cutting-edge mobile healthcare platform designed to bridge the gap between patients and healthcare providers through innovative technology. The app combines real-time monitoring, AI-powered assistance, and seamless communication to deliver comprehensive healthcare services.
 
 ## ✨ Key Features
 
@@ -130,7 +130,7 @@ TeleMedicine/
 
 ## 🤝 Contributing
 
-We welcome contributions to improve Syapse-TeleMedicine! Please read our contributing guidelines and submit pull requests for any improvements.
+We welcome contributions to improve Synapse-TeleMedicine! Please read our contributing guidelines and submit pull requests for any improvements.
 
 ## 📄 License
 
