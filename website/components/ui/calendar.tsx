@@ -55,15 +55,15 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="bg-white/70 backdrop-blur-xl rounded-3xl border border-white/30 shadow-2xl overflow-hidden">
+    <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6">
+      <div className="bg-neutral-900 p-6">
         <div className="flex items-center justify-between">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-            className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
+            className="p-2 rounded-xl bg-white/15 hover:bg-white/25 transition-colors"
           >
             <ChevronLeft className="w-5 h-5 text-white" />
           </motion.button>
@@ -74,7 +74,7 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-            className="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors"
+            className="p-2 rounded-xl bg-white/15 hover:bg-white/25 transition-colors"
           >
             <ChevronRight className="w-5 h-5 text-white" />
           </motion.button>
@@ -82,11 +82,11 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
       </div>
 
       {/* Week Days */}
-      <div className="grid grid-cols-7 bg-indigo-50/50">
+      <div className="grid grid-cols-7 bg-neutral-100">
         {weekDays.map((day) => (
           <div
             key={day}
-            className="py-3 text-center text-sm font-neue-bold text-indigo-600"
+            className="py-3 text-center text-sm font-neue-bold text-neutral-900"
           >
             {day}
           </div>
@@ -107,25 +107,25 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
               whileHover={{ scale: 0.98 }}
               onClick={() => handleDateClick(day)}
               className={cn(
-                "min-h-[100px] border-b border-r border-gray-100 p-2 cursor-pointer transition-all duration-200",
-                !isCurrentMonth && "bg-gray-50/50",
-                isSelected && "bg-indigo-50",
-                isDayToday && "bg-gradient-to-br from-indigo-50 to-purple-50"
+                "min-h-[100px] border-b border-r border-neutral-100 p-2 cursor-pointer transition-all duration-200",
+                !isCurrentMonth && "bg-neutral-50/50",
+                isSelected && "bg-neutral-100",
+                isDayToday && "bg-neutral-100"
               )}
             >
               <div className="flex items-center justify-between mb-1">
                 <span
                   className={cn(
                     "text-sm font-poppins",
-                    !isCurrentMonth && "text-gray-400",
-                    isDayToday && "font-bold text-indigo-600",
-                    isSelected && "text-indigo-700"
+                    !isCurrentMonth && "text-neutral-400",
+                    isDayToday && "font-bold text-neutral-900",
+                    isSelected && "text-neutral-900"
                   )}
                 >
                   {format(day, "d")}
                 </span>
                 {isDayToday && (
-                  <span className="text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full font-poppins">
+                  <span className="text-xs bg-neutral-900 text-white px-2 py-0.5 rounded-full font-poppins">
                     Today
                   </span>
                 )}
@@ -141,14 +141,14 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
                     }}
                     className={cn(
                       "text-xs p-1.5 rounded-lg truncate cursor-pointer transition-all",
-                      apt.color || "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
+                      apt.color || "bg-neutral-200 text-neutral-800 hover:bg-neutral-300"
                     )}
                   >
                     <span className="font-semibold">{apt.time}</span> - {apt.patientName}
                   </motion.div>
                 ))}
                 {dayAppointments.length > 2 && (
-                  <div className="text-xs text-indigo-600 font-medium pl-1">
+                  <div className="text-xs text-neutral-700 font-medium pl-1">
                     +{dayAppointments.length - 2} more
                   </div>
                 )}
@@ -165,10 +165,10 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t border-gray-100 overflow-hidden"
+            className="border-t border-neutral-100 overflow-hidden"
           >
-            <div className="p-6 bg-gradient-to-br from-indigo-50/50 to-purple-50/50">
-              <h3 className="font-neue-bold text-lg text-gray-900 mb-4">
+            <div className="p-6 bg-neutral-50">
+              <h3 className="font-neue-bold text-lg text-neutral-900 mb-4">
                 {format(selectedDate, "EEEE, MMMM d, yyyy")}
               </h3>
               <div className="space-y-3">
@@ -178,17 +178,17 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
                       key={apt.id}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
-                      className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-white/50"
+                      className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-neutral-200"
                     >
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-neue-bold">
+                      <div className="w-12 h-12 rounded-full bg-neutral-900 flex items-center justify-center text-white font-neue-bold">
                         {apt.patientName.charAt(0)}
                       </div>
                       <div className="flex-1">
-                        <p className="font-neue-bold text-gray-900">{apt.patientName}</p>
-                        <p className="text-sm text-gray-600 font-poppins">{apt.type}</p>
+                        <p className="font-neue-bold text-neutral-900">{apt.patientName}</p>
+                        <p className="text-sm text-neutral-600 font-poppins">{apt.type}</p>
                       </div>
                       <div className="text-right">
-                        <div className="flex items-center gap-1 text-indigo-600 font-semibold">
+                        <div className="flex items-center gap-1 text-neutral-900 font-semibold">
                           <Clock className="w-4 h-4" />
                           {apt.time}
                         </div>
@@ -196,7 +196,7 @@ export function Calendar({ appointments, onDateSelect, onAppointmentClick }: Cal
                     </motion.div>
                   ))
                 ) : (
-                  <p className="text-gray-500 font-poppins text-center py-4">
+                  <p className="text-neutral-500 font-poppins text-center py-4">
                     No appointments scheduled for this day
                   </p>
                 )}

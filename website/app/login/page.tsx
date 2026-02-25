@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { FloatingOrbs } from '@/components/ui/animated-gradient';
-import { Spotlight } from '@/components/ui/spotlight';
 import { Stethoscope, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 export default function Login() {
@@ -22,7 +20,6 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     router.push('/dashboard');
   };
@@ -35,81 +32,78 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/50 to-purple-50/50 flex items-center justify-center px-8 py-12 relative overflow-hidden">
-      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(99, 102, 241, 0.1)" />
-      <FloatingOrbs />
-
+    <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-6 py-12">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="w-full max-w-md relative z-10"
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
       >
-        <Card className="bg-white/80 backdrop-blur-2xl border-white/40 shadow-2xl">
+        <Card>
           <CardHeader className="text-center pb-2">
             <motion.div
-              initial={{ scale: 0 }}
+              initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.2 }}
-              className="inline-flex mx-auto p-4 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-xl"
+              transition={{ type: 'spring', delay: 0.1 }}
+              className="inline-flex mx-auto p-4 bg-neutral-900 rounded-2xl mb-4"
             >
               <Stethoscope className="w-10 h-10 text-white" />
             </motion.div>
-            <CardTitle className="text-4xl font-neue-bold text-gray-900">
-              Welcome Back
+            <CardTitle className="text-3xl font-neue-bold text-neutral-900">
+              Welcome back
             </CardTitle>
-            <CardDescription className="text-base">
-              Sign in to access your doctor's portal
+            <CardDescription className="text-base text-neutral-600">
+              Sign in to access your doctor&apos;s portal
             </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-5">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.2 }}
               >
-                <label className="block text-sm font-neue-bold text-gray-700 mb-2">
-                  Email Address
+                <label className="block text-sm font-semibold font-poppins text-neutral-700 mb-2">
+                  Email address
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-poppins bg-white/80"
+                    className="w-full pl-12 pr-4 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-neutral-400 focus:border-neutral-500 outline-none transition-all bg-white text-neutral-900 placeholder:text-neutral-400"
                     placeholder="doctor@example.com"
                   />
                 </div>
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
+                initial={{ opacity: 0, x: -16 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.3 }}
               >
-                <label className="block text-sm font-neue-bold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold font-poppins text-neutral-700 mb-2">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all font-poppins bg-white/80"
+                    className="w-full pl-12 pr-12 py-3 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-neutral-400 focus:border-neutral-500 outline-none transition-all bg-white text-neutral-900 placeholder:text-neutral-400"
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -119,44 +113,44 @@ export default function Login() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ delay: 0.4 }}
                 className="flex items-center justify-between"
               >
                 <label className="flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    className="w-4 h-4 text-neutral-900 border-neutral-300 rounded focus:ring-neutral-400"
                   />
-                  <span className="ml-2 text-sm text-gray-600 font-poppins">Remember me</span>
+                  <span className="ml-2 text-sm text-neutral-600">Remember me</span>
                 </label>
                 <Link
                   href="#"
-                  className="text-sm text-indigo-600 hover:text-indigo-700 font-poppins font-medium"
+                  className="text-sm text-neutral-900 font-medium hover:text-neutral-700 hover:underline"
                 >
                   Forgot password?
                 </Link>
               </motion.div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ delay: 0.5 }}
               >
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full font-neue-bold"
+                  className="w-full font-semibold bg-neutral-900 text-white hover:bg-neutral-800 hover:text-white"
                   disabled={isLoading}
                 >
                   {isLoading ? (
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                       className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                     />
                   ) : (
                     <>
-                      Sign In
+                      Sign in
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </>
                   )}
@@ -167,16 +161,16 @@ export default function Login() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.6 }}
               className="mt-8 text-center"
             >
-              <p className="text-gray-600 font-poppins">
-                Don't have an account?{' '}
+              <p className="text-neutral-600">
+                Don&apos;t have an account?{' '}
                 <Link
                   href="/register"
-                  className="text-indigo-600 font-neue-bold hover:text-indigo-700 transition-colors"
+                  className="text-neutral-900 font-semibold hover:text-neutral-700 hover:underline"
                 >
-                  Create Account
+                  Create account
                 </Link>
               </p>
             </motion.div>
@@ -184,14 +178,14 @@ export default function Login() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.7 }}
               className="mt-6 text-center"
             >
               <Link
                 href="/"
-                className="text-gray-500 hover:text-gray-700 transition-colors text-sm font-poppins inline-flex items-center gap-1"
+                className="text-neutral-500 hover:text-neutral-900 text-sm inline-flex items-center gap-1"
               >
-                ← Back to Home
+                ← Back to home
               </Link>
             </motion.div>
           </CardContent>

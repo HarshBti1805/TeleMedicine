@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Poppins';
-  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
+  src: url('/fonts/Poppins.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -40,16 +40,158 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'AvenirNextLTPro';
+  src: url('/fonts/AvenirNextLTPro-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'VioletSans';
+  src: url('/fonts/VioletSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BogitaMono';
+  src: url('/fonts/BogitaMono-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/Manrope-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Syne';
+  src: url('/fonts/Syne.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JosefinSans';
+  src: url('/fonts/JosefinSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LibreBaskerville';
+  src: url('/fonts/LibreBaskerville.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PlayfairDisplay';
+  src: url('/fonts/PlayfairDisplay.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'TTCommons';
+  src: url('/fonts/TTCommons.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Akrobat';
+  src: url('/fonts/Akrobat-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DMMono';
+  src: url('/fonts/DMMono-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InstrumentSerif';
+  src: url('/fonts/InstrumentSerif-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'InstrumentSerif';
+  src: url('/fonts/InstrumentSerif-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Vonique64';
+  src: url('/fonts/Vonique64-JKgM.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Raleway';
+  src: url('/fonts/Raleway.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Arvo';
+  src: url('/fonts/Arvo-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SpaceGrotesk';
+  src: url('/fonts/SpaceGrotesk-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #f8fafc;
-  --foreground: #11181C;
-  --primary-indigo: #6366F1;
-  --primary-indigo-dark: #4f46e5;
-  --primary-indigo-light: #818CF8;
-  --accent-purple: #8b5cf6;
-  --gradient-start: #f8fafc;
-  --gradient-mid: #e0e7ff;
-  --gradient-end: #c7d2fe;
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --border: #e5e5e5;
 }
 
 @theme inline {
@@ -82,22 +224,90 @@ body {
   font-family: 'Gotham', sans-serif;
 }
 
+.font-avenir {
+  font-family: 'AvenirNextLTPro', sans-serif;
+}
+
+.font-violet-sans {
+  font-family: 'VioletSans', sans-serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.font-bogita-mono {
+  font-family: 'BogitaMono', sans-serif;
+}
+
+.font-manrope {
+  font-family: 'Manrope', sans-serif;
+}
+
+.font-syne {
+  font-family: 'Syne', sans-serif;
+}
+
+.font-josefin-sans {
+  font-family: 'JosefinSans', sans-serif;
+}
+
+.font-libre-baskerville {
+  font-family: 'LibreBaskerville', sans-serif;
+}
+
+.font-playfair-display {
+  font-family: 'PlayfairDisplay', sans-serif;
+}
+
+.font-tt-commons {
+  font-family: 'TTCommons', sans-serif;
+}
+
+.font-akrobat {
+  font-family: 'Akrobat', sans-serif;
+}
+
+.font-dm-mono {
+  font-family: 'DMMono', sans-serif;
+}
+
+.font-instrument-serif {
+  font-family: 'InstrumentSerif', serif;
+}
+
+.font-vonique64 {
+  font-family: 'Vonique64', sans-serif;
+}
+
+.font-raleway {
+  font-family: 'Raleway', sans-serif;
+}
+
+.font-arvo {
+  font-family: 'Arvo', serif;
+}
+
+.font-space-grotesk {
+  font-family: 'SpaceGrotesk', sans-serif;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #6366F1;
-  border-radius: 5px;
+  background: #a3a3a3;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4f46e5;
+  background: #737373;
 }
 
 /* Glass morphism effect */
@@ -192,14 +402,3 @@ body {
   animation: gradient-shift 3s ease infinite;
 }
 
-/* Glow effect */
-.glow {
-  box-shadow: 0 0 60px rgba(99, 102, 241, 0.3),
-              0 0 120px rgba(139, 92, 246, 0.2);
-}
-
-/* Hover glow */
-.hover-glow:hover {
-  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4),
-              0 0 60px rgba(139, 92, 246, 0.3);
-}
